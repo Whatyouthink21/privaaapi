@@ -1,5 +1,5 @@
 // api/index.js
-// No external packages needed - uses built-in fetch
+// This is the ONLY file you need
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -10,18 +10,23 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
+  // Get parameters from URL
   const { id, type, season, episode } = req.query;
 
-  // Validate parameters
+  // If no parameters, show API info
   if (!id || !type) {
-    return res.status(400).json({
-      success: false,
-      error: 'Missing parameters. Need: id and type (movie/tv)'
+    return res.json({
+      status: 'Priva Player API is running!',
+      usage: '/api?id=1081003&type=movie',
+      endpoints: {
+        movie: '/api?id=1081003&type=movie',
+        tv: '/api?id=1399&type=tv&season=1&episode=1'
+      }
     });
   }
 
   try {
-    // Build the VidSrc URL
+    // Build the VidSrc embed URL
     let embedUrl;
     if (type === 'movie') {
       embedUrl = `https://vidsrc.to/embed/movie/${id}`;
@@ -48,7 +53,7 @@ module.exports = async (req, res) => {
 
     const html = await response.text();
 
-    // Method 1: Look for m3u8 URLs
+    // Look for m3u8 URLs
     const m3u8Regex = /https?:\/\/[^"'\s]+\.m3u8[^"'\s]*/g;
     const m3u8Matches = html.match(m3u8Regex);
 
@@ -61,7 +66,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Method 2: Look for iframe src
+    // Look for iframe src
     const iframeRegex = /<iframe[^>]+src=["']([^"']+)["']/i;
     const iframeMatch = html.match(iframeRegex);
 
@@ -73,19 +78,6 @@ module.exports = async (req, res) => {
         success: true,
         url: fullUrl,
         note: 'This is an iframe URL - can be embedded'
-      });
-    }
-
-    // Method 3: Look for any video URL
-    const videoRegex = /https?:\/\/[^"'\s]+\.(mp4|ts|m3u8)[^"'\s]*/g;
-    const videoMatches = html.match(videoRegex);
-
-    if (videoMatches && videoMatches.length > 0) {
-      console.log('✅ Found video URL');
-      return res.json({
-        success: true,
-        url: videoMatches[0],
-        sources: videoMatches.map(url => ({ stream: url }))
       });
     }
 
