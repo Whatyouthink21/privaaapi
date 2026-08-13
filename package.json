@@ -1,7 +1,7 @@
 {
-  "name": "priva-ruby",
+  "name": "privaaapi",
   "version": "1.0.0",
   "dependencies": {
-    "vidsrc.ts": "latest"
+    "vidsrc": "^1.0.9"
   }
 }
