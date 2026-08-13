@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/tmdbScrape.js": {
+      "maxDuration": 30
+    }
+  }
+}
