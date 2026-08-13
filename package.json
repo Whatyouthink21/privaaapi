@@ -1,0 +1,7 @@
+{
+  "name": "priva-ruby",
+  "version": "1.0.0",
+  "dependencies": {
+    "vidsrc.ts": "latest"
+  }
+}
