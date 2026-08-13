@@ -1,7 +1,7 @@
 {
   "name": "privaaapi",
   "version": "1.0.0",
-  "dependencies": {
-    "vidsrc": "^1.0.9"
+  "engines": {
+    "node": "24.x"
   }
 }
